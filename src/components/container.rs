@@ -460,13 +460,12 @@ where
         }
     }
 
-    /// Handle mouse event.
-    pub fn handle_mouse(&mut self, mouse: MouseEvent) -> EventResult {
+    /// Handle mouse event with actual screen dimensions for correct click detection.
+    pub fn handle_mouse(&mut self, mouse: MouseEvent, screen: Rect) -> EventResult {
         if !self.state.visible {
             return EventResult::NotHandled;
         }
 
-        let screen = Rect::new(0, 0, 80, 24); // Will be passed from actual screen
         let area = self.calculate_area(screen);
 
         if let MouseEventKind::Down(MouseButton::Left) = mouse.kind {
@@ -485,56 +484,6 @@ where
             }
 
             // Check click regions
-            if let Some(target) = self.state.click_regions.handle_click(col, row) {
-                match target {
-                    DialogFocusTarget::Button(idx) => {
-                        if let Some((_, action)) = self.config.buttons.get(*idx) {
-                            let action = action.clone();
-                            if action.is_close() {
-                                self.state.hide();
-                            }
-                            return EventResult::Action(action);
-                        }
-                    }
-                    DialogFocusTarget::Child(idx) => {
-                        self.state.focus.set(DialogFocusTarget::Child(*idx));
-                        return EventResult::Consumed;
-                    }
-                    DialogFocusTarget::Close => {
-                        self.state.hide();
-                        return EventResult::Action(ContainerAction::Close);
-                    }
-                }
-            }
-        }
-
-        EventResult::NotHandled
-    }
-
-    /// Handle mouse event with screen dimensions.
-    pub fn handle_mouse_with_screen(&mut self, mouse: MouseEvent, screen: Rect) -> EventResult {
-        if !self.state.visible {
-            return EventResult::NotHandled;
-        }
-
-        let area = self.calculate_area(screen);
-
-        if let MouseEventKind::Down(MouseButton::Left) = mouse.kind {
-            let col = mouse.column;
-            let row = mouse.row;
-
-            // Check if click is outside dialog
-            if self.config.close_on_outside_click
-                && (col < area.x
-                    || col >= area.x + area.width
-                    || row < area.y
-                    || row >= area.y + area.height)
-            {
-                self.state.hide();
-                return EventResult::Action(ContainerAction::Close);
-            }
-
-            // Check click regions (same as handle_mouse)
             if let Some(target) = self.state.click_regions.handle_click(col, row) {
                 match target {
                     DialogFocusTarget::Button(idx) => {

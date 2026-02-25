@@ -264,7 +264,7 @@ fn main() -> io::Result<()> {
                 let screen = terminal.get_frame().area();
                 let mut dialog = PopupDialog::new(&app.config, &mut app.dialog_state, |_, _, _| {});
 
-                let result = dialog.handle_mouse_with_screen(mouse, screen);
+                let result = dialog.handle_mouse(mouse, screen);
                 drop(dialog); // Drop dialog to release borrow
 
                 match result {
