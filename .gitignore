@@ -2,3 +2,4 @@
 Cargo.lock
 .fastembed_cache
 .claude
+demos/gifs/
