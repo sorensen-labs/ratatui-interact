@@ -21,6 +21,8 @@
 //! - [`Progress`] - Progress bar with label and percentage
 //! - [`MarqueeText`] - Scrolling text for long content in limited space
 //! - [`Spinner`] - Animated loading/processing indicator with multiple styles
+//! - [`StatusLine`] - Single-line status bar with left/center/right sections and PowerLine separators
+//! - [`HotkeyFooter`] - Single-line hotkey hint display with styled key/description pairs
 //!
 //! ## Navigation Components
 //! - [`ListPicker`] - Scrollable list with selection
@@ -54,6 +56,7 @@ pub mod context_menu;
 pub mod diff_viewer;
 pub mod file_explorer;
 pub mod hotkey_dialog;
+pub mod hotkey_footer;
 pub mod input;
 pub mod list_picker;
 pub mod log_viewer;
@@ -66,6 +69,7 @@ pub mod scrollable_content;
 pub mod select;
 pub mod spinner;
 pub mod split_pane;
+pub mod status_line;
 pub mod step_display;
 pub mod tab_view;
 pub mod textarea;
@@ -101,6 +105,7 @@ pub use diff_viewer::{
     DiffViewerState, DiffViewerStyle, handle_diff_viewer_key, handle_diff_viewer_mouse,
 };
 pub use file_explorer::{EntryType, FileEntry, FileExplorer, FileExplorerState, FileExplorerStyle};
+pub use hotkey_footer::{HotkeyFooter, HotkeyFooterStyle, HotkeyItem};
 pub use hotkey_dialog::{
     CategoryClickRegion, HotkeyCategory, HotkeyClickRegion, HotkeyDialog, HotkeyDialogAction,
     HotkeyDialogState, HotkeyDialogStyle, HotkeyEntryData, HotkeyFocus, HotkeyProvider,
@@ -139,5 +144,6 @@ pub use tab_view::{
     handle_tab_view_mouse,
 };
 pub use textarea::{TabConfig, TextArea, TextAreaAction, TextAreaState, TextAreaStyle, WrapMode};
+pub use status_line::{StatusLine, StatusLineStyle};
 pub use toast::{Toast, ToastState, ToastStyle};
 pub use tree_view::{FlatNode, TreeNode, TreeStyle, TreeView, TreeViewState, get_selected_id};
