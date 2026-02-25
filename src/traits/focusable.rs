@@ -63,9 +63,11 @@ impl From<u32> for FocusId {
     }
 }
 
-impl From<usize> for FocusId {
-    fn from(id: usize) -> Self {
-        Self(id as u32)
+impl TryFrom<usize> for FocusId {
+    type Error = std::num::TryFromIntError;
+
+    fn try_from(id: usize) -> Result<Self, Self::Error> {
+        u32::try_from(id).map(Self)
     }
 }
 
@@ -187,7 +189,7 @@ mod tests {
         let id_from_u32: FocusId = 100u32.into();
         assert_eq!(id_from_u32.id(), 100);
 
-        let id_from_usize: FocusId = 200usize.into();
+        let id_from_usize: FocusId = 200usize.try_into().expect("focus id overflow");
         assert_eq!(id_from_usize.id(), 200);
     }
 
