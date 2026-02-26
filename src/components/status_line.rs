@@ -28,13 +28,7 @@
 //! status.render(Rect::new(0, 0, 80, 1), &mut buf);
 //! ```
 
-use ratatui::{
-    buffer::Buffer,
-    layout::Rect,
-    style::Style,
-    text::Line,
-    widgets::Widget,
-};
+use ratatui::{buffer::Buffer, layout::Rect, style::Style, text::Line, widgets::Widget};
 
 /// PowerLine separator constants (require Nerd Font).
 pub mod powerline {
@@ -60,21 +54,12 @@ struct StatusLineSection<'a> {
 }
 
 /// Style configuration for a [`StatusLine`].
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct StatusLineStyle {
     /// Background fill style applied to the center region.
     pub background: Style,
     /// Padding columns around center text (default: 0).
     pub center_margin: u16,
-}
-
-impl Default for StatusLineStyle {
-    fn default() -> Self {
-        Self {
-            background: Style::default(),
-            center_margin: 0,
-        }
-    }
 }
 
 impl StatusLineStyle {
@@ -180,7 +165,12 @@ impl Default for StatusLine<'_> {
 ///
 /// Iterates in reverse so that the last-added right section renders at
 /// the right edge, matching the intuitive left-to-right visual order.
-fn render_right(sections: Vec<StatusLineSection<'_>>, mut x_end: u16, y: u16, buf: &mut Buffer) -> u16 {
+fn render_right(
+    sections: Vec<StatusLineSection<'_>>,
+    mut x_end: u16,
+    y: u16,
+    buf: &mut Buffer,
+) -> u16 {
     for section in sections.into_iter().rev() {
         let content_w = section.content.width() as u16;
         section.content.render(
@@ -199,10 +189,17 @@ fn render_right(sections: Vec<StatusLineSection<'_>>, mut x_end: u16, y: u16, bu
 }
 
 /// Render left sections from left to right, returning the new left edge.
-fn render_left(sections: Vec<StatusLineSection<'_>>, mut x_start: u16, y: u16, buf: &mut Buffer) -> u16 {
+fn render_left(
+    sections: Vec<StatusLineSection<'_>>,
+    mut x_start: u16,
+    y: u16,
+    buf: &mut Buffer,
+) -> u16 {
     for section in sections {
         let content_w = section.content.width() as u16;
-        section.content.render(Rect::new(x_start, y, content_w, 1), buf);
+        section
+            .content
+            .render(Rect::new(x_start, y, content_w, 1), buf);
         x_start = x_start.saturating_add(content_w);
 
         if let Some(sep) = section.separator {
@@ -462,9 +459,7 @@ mod tests {
         let mut buf = Buffer::empty(Rect::new(0, 0, 80, 1));
         // margin = 40_000, margin * 2 = 80_000 which overflows u16::MAX (65535).
         let style = StatusLineStyle::default().center_margin(40_000);
-        let status = StatusLine::new()
-            .center(Line::from("center"))
-            .style(style);
+        let status = StatusLine::new().center(Line::from("center")).style(style);
         // Should not panic; center_width should saturate to 0.
         status.render(Rect::new(0, 0, 80, 1), &mut buf);
     }
@@ -474,9 +469,7 @@ mod tests {
     fn test_center_margin_max_u16() {
         let mut buf = Buffer::empty(Rect::new(0, 0, 80, 1));
         let style = StatusLineStyle::default().center_margin(u16::MAX);
-        let status = StatusLine::new()
-            .center(Line::from("text"))
-            .style(style);
+        let status = StatusLine::new().center(Line::from("text")).style(style);
         status.render(Rect::new(0, 0, 80, 1), &mut buf);
     }
 
@@ -531,8 +524,7 @@ mod tests {
     #[test]
     fn test_cjk_separator() {
         let mut buf = Buffer::empty(Rect::new(0, 0, 40, 1));
-        let status = StatusLine::new()
-            .left_section_with_sep(Line::from("left"), Line::from("《"));
+        let status = StatusLine::new().left_section_with_sep(Line::from("left"), Line::from("《"));
         status.render(Rect::new(0, 0, 40, 1), &mut buf);
     }
 
@@ -565,8 +557,7 @@ mod tests {
     fn test_hundred_left_sections_with_sep() {
         let mut builder = StatusLine::new();
         for i in 0..100 {
-            builder = builder
-                .left_section_with_sep(Line::from(format!("{i}")), Line::from("|"));
+            builder = builder.left_section_with_sep(Line::from(format!("{i}")), Line::from("|"));
         }
         let mut buf = Buffer::empty(Rect::new(0, 0, 80, 1));
         builder.render(Rect::new(0, 0, 80, 1), &mut buf);
@@ -605,11 +596,7 @@ mod tests {
             .style(StatusLineStyle::default());
         status.render(Rect::new(0, 0, 40, 1), &mut buf);
         // Center text "hello" must appear somewhere in the buffer.
-        let content: String = buf
-            .content
-            .iter()
-            .map(|c| c.symbol().to_string())
-            .collect();
+        let content: String = buf.content.iter().map(|c| c.symbol().to_string()).collect();
         assert!(content.contains('h'), "center text should be rendered");
     }
 

@@ -91,7 +91,9 @@ impl HotkeyFooterStyle {
     /// Minimal preset: no brackets, white keys, gray descriptions.
     pub fn minimal() -> Self {
         Self {
-            key_style: Style::default().fg(Color::White).add_modifier(Modifier::BOLD),
+            key_style: Style::default()
+                .fg(Color::White)
+                .add_modifier(Modifier::BOLD),
             bracket_key: false,
             ..Default::default()
         }
@@ -298,10 +300,7 @@ mod tests {
 
     #[test]
     fn test_render_with_items() {
-        let items = vec![
-            HotkeyItem::new("q", "Quit"),
-            HotkeyItem::new("?", "Help"),
-        ];
+        let items = vec![HotkeyItem::new("q", "Quit"), HotkeyItem::new("?", "Help")];
         let footer = HotkeyFooter::new(&items);
         let mut buf = Buffer::empty(Rect::new(0, 0, 40, 1));
 
@@ -366,7 +365,10 @@ mod tests {
         HotkeyFooter::new(&items).render(Rect::new(0, 0, 40, 1), &mut buf);
         // No key brackets should appear.
         let content: String = buf.content.iter().map(|c| c.symbol().to_string()).collect();
-        assert!(!content.contains('['), "empty items should not produce '[' chars");
+        assert!(
+            !content.contains('['),
+            "empty items should not produce '[' chars"
+        );
     }
 
     /// 100 items — must not panic.
@@ -393,7 +395,9 @@ mod tests {
         let items = vec![HotkeyItem::new("", "Action")];
         let style = HotkeyFooterStyle::default().bracket_key(false);
         let mut buf = Buffer::empty(Rect::new(0, 0, 40, 1));
-        HotkeyFooter::new(&items).style(style).render(Rect::new(0, 0, 40, 1), &mut buf);
+        HotkeyFooter::new(&items)
+            .style(style)
+            .render(Rect::new(0, 0, 40, 1), &mut buf);
     }
 
     /// Item with empty description — produces " " (space + empty), must not panic.
@@ -459,62 +463,57 @@ mod tests {
     /// Empty separator string — must not panic, no separator gap rendered.
     #[test]
     fn test_empty_separator() {
-        let items = vec![
-            HotkeyItem::new("q", "Quit"),
-            HotkeyItem::new("?", "Help"),
-        ];
+        let items = vec![HotkeyItem::new("q", "Quit"), HotkeyItem::new("?", "Help")];
         let style = HotkeyFooterStyle::default().separator("");
         let mut buf = Buffer::empty(Rect::new(0, 0, 40, 1));
-        HotkeyFooter::new(&items).style(style).render(Rect::new(0, 0, 40, 1), &mut buf);
+        HotkeyFooter::new(&items)
+            .style(style)
+            .render(Rect::new(0, 0, 40, 1), &mut buf);
     }
 
     /// Very long separator — must not panic.
     #[test]
     fn test_very_long_separator() {
-        let items = vec![
-            HotkeyItem::new("q", "Quit"),
-            HotkeyItem::new("?", "Help"),
-        ];
+        let items = vec![HotkeyItem::new("q", "Quit"), HotkeyItem::new("?", "Help")];
         let long_sep = " | ".repeat(200);
         let style = HotkeyFooterStyle::default().separator(long_sep);
         let mut buf = Buffer::empty(Rect::new(0, 0, 40, 1));
-        HotkeyFooter::new(&items).style(style).render(Rect::new(0, 0, 40, 1), &mut buf);
+        HotkeyFooter::new(&items)
+            .style(style)
+            .render(Rect::new(0, 0, 40, 1), &mut buf);
     }
 
     /// Separator containing a newline — must not panic (Paragraph handles it).
     #[test]
     fn test_newline_separator() {
-        let items = vec![
-            HotkeyItem::new("q", "Quit"),
-            HotkeyItem::new("?", "Help"),
-        ];
+        let items = vec![HotkeyItem::new("q", "Quit"), HotkeyItem::new("?", "Help")];
         let style = HotkeyFooterStyle::default().separator("\n");
         let mut buf = Buffer::empty(Rect::new(0, 0, 40, 1));
-        HotkeyFooter::new(&items).style(style).render(Rect::new(0, 0, 40, 1), &mut buf);
+        HotkeyFooter::new(&items)
+            .style(style)
+            .render(Rect::new(0, 0, 40, 1), &mut buf);
     }
 
     /// Separator with tab character — must not panic.
     #[test]
     fn test_tab_separator() {
-        let items = vec![
-            HotkeyItem::new("q", "Quit"),
-            HotkeyItem::new("?", "Help"),
-        ];
+        let items = vec![HotkeyItem::new("q", "Quit"), HotkeyItem::new("?", "Help")];
         let style = HotkeyFooterStyle::default().separator("\t");
         let mut buf = Buffer::empty(Rect::new(0, 0, 40, 1));
-        HotkeyFooter::new(&items).style(style).render(Rect::new(0, 0, 40, 1), &mut buf);
+        HotkeyFooter::new(&items)
+            .style(style)
+            .render(Rect::new(0, 0, 40, 1), &mut buf);
     }
 
     /// Unicode separator (powerline arrow) — must not panic.
     #[test]
     fn test_unicode_separator() {
-        let items = vec![
-            HotkeyItem::new("q", "Quit"),
-            HotkeyItem::new("?", "Help"),
-        ];
+        let items = vec![HotkeyItem::new("q", "Quit"), HotkeyItem::new("?", "Help")];
         let style = HotkeyFooterStyle::default().separator(" \u{e0b0} ");
         let mut buf = Buffer::empty(Rect::new(0, 0, 40, 1));
-        HotkeyFooter::new(&items).style(style).render(Rect::new(0, 0, 40, 1), &mut buf);
+        HotkeyFooter::new(&items)
+            .style(style)
+            .render(Rect::new(0, 0, 40, 1), &mut buf);
     }
 
     // --- Tiny area attacks ---
@@ -568,7 +567,9 @@ mod tests {
         let items = vec![HotkeyItem::new("q", "Quit")];
         let style = HotkeyFooterStyle::default().background(Style::default());
         let mut buf = Buffer::empty(Rect::new(0, 0, 40, 1));
-        HotkeyFooter::new(&items).style(style).render(Rect::new(0, 0, 40, 1), &mut buf);
+        HotkeyFooter::new(&items)
+            .style(style)
+            .render(Rect::new(0, 0, 40, 1), &mut buf);
     }
 
     /// Vim preset renders without panic and produces no brackets.
@@ -580,7 +581,10 @@ mod tests {
             .style(HotkeyFooterStyle::vim())
             .render(Rect::new(0, 0, 40, 1), &mut buf);
         let content: String = buf.content.iter().map(|c| c.symbol().to_string()).collect();
-        assert!(!content.contains('['), "vim preset should not render brackets");
+        assert!(
+            !content.contains('['),
+            "vim preset should not render brackets"
+        );
     }
 
     /// Minimal preset renders without panic.

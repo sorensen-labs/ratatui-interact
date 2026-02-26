@@ -64,7 +64,7 @@ fn main() -> io::Result<()> {
     let mut app = App::new();
 
     loop {
-        terminal.draw(|f| ui(f, &mut app))?;
+        terminal.draw(|f| ui(f, &app))?;
 
         if event::poll(std::time::Duration::from_millis(100))? {
             if let Event::Key(key) = event::read()? {
@@ -100,7 +100,7 @@ fn ui(f: &mut Frame, app: &App) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Length(3),  // Title
+            Constraint::Length(3), // Title
             Constraint::Min(1),    // Content
             Constraint::Length(1), // Status line
         ])
@@ -157,21 +157,19 @@ fn ui(f: &mut Frame, app: &App) {
                     .style(Style::default().fg(mode_color).bg(Color::DarkGray)),
             )
             .left_section_with_sep(
-                Span::from(" main ")
-                    .style(Style::default().fg(Color::White).bg(Color::DarkGray)),
+                Span::from(" main ").style(Style::default().fg(Color::White).bg(Color::DarkGray)),
                 Span::from(powerline::SLANT_RIGHT)
                     .style(Style::default().fg(Color::DarkGray).bg(bg_color)),
             )
             .center(Line::from("status_line_demo.rs"))
             .right_section_with_sep(
-                Span::from(format!(" Ln 42, Col 8 "))
+                Span::from(" Ln 42, Col 8 ".to_string())
                     .style(Style::default().fg(Color::White).bg(Color::DarkGray)),
                 Span::from(powerline::SLANT_LEFT)
                     .style(Style::default().fg(Color::DarkGray).bg(bg_color)),
             )
             .right_section_with_sep(
-                Span::from(" UTF-8 ")
-                    .style(Style::default().fg(Color::Black).bg(Color::Cyan)),
+                Span::from(" UTF-8 ").style(Style::default().fg(Color::Black).bg(Color::Cyan)),
                 Span::from(powerline::SLANT_LEFT)
                     .style(Style::default().fg(Color::Cyan).bg(Color::DarkGray)),
             )
@@ -183,8 +181,7 @@ fn ui(f: &mut Frame, app: &App) {
                     .style(Style::default().fg(Color::Black).bg(mode_color)),
             )
             .left_section(
-                Span::from(" main ")
-                    .style(Style::default().fg(Color::White).bg(Color::DarkGray)),
+                Span::from(" main ").style(Style::default().fg(Color::White).bg(Color::DarkGray)),
             )
             .center(Line::from("status_line_demo.rs"))
             .right_section(
@@ -192,8 +189,7 @@ fn ui(f: &mut Frame, app: &App) {
                     .style(Style::default().fg(Color::White).bg(Color::DarkGray)),
             )
             .right_section(
-                Span::from(" UTF-8 ")
-                    .style(Style::default().fg(Color::Black).bg(Color::Cyan)),
+                Span::from(" UTF-8 ").style(Style::default().fg(Color::Black).bg(Color::Cyan)),
             )
             .style(style)
     };

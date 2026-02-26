@@ -99,7 +99,7 @@ fn ui(f: &mut Frame, app: &App) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Length(3),  // Title
+            Constraint::Length(3), // Title
             Constraint::Min(1),    // Content
             Constraint::Length(1), // Footer
         ])
@@ -121,10 +121,7 @@ fn ui(f: &mut Frame, app: &App) {
             Span::raw(": Quit"),
         ]),
         Line::from(""),
-        Line::from(format!(
-            "  Current style: {}",
-            STYLE_NAMES[app.style_index]
-        )),
+        Line::from(format!("  Current style: {}", STYLE_NAMES[app.style_index])),
     ]);
     f.render_widget(content, chunks[1]);
 
