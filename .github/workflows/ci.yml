@@ -9,8 +9,6 @@ on:
 env:
   CARGO_TERM_COLOR: always
   RUSTFLAGS: "-Dwarnings"
-  # arboard (clipboard feature) needs X11 libs on Linux
-  ALL_FEATURES: "markdown,filesystem,clipboard"
 
 jobs:
   fmt:
@@ -53,31 +51,36 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        features:
-          - ""
-          - "markdown"
-          - "filesystem"
-          - "clipboard"
-          - "markdown,filesystem,clipboard"
+        include:
+          - features: ""
+            cache-key: "default"
+          - features: "markdown"
+            cache-key: "markdown"
+          - features: "filesystem"
+            cache-key: "filesystem"
+          - features: "clipboard"
+            cache-key: "clipboard"
+          - features: "markdown,filesystem,clipboard"
+            cache-key: "all-features"
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
         with:
-          key: ${{ matrix.features }}
+          key: ${{ matrix.cache-key }}
       - name: Install system deps (clipboard)
         if: contains(matrix.features, 'clipboard')
         run: sudo apt-get update && sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev
       - run: cargo check --features "${{ matrix.features }}"
 
   msrv:
-    name: MSRV (1.85)
+    name: MSRV (1.86)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@master
         with:
-          toolchain: "1.85"
+          toolchain: "1.86"
       - uses: Swatinem/rust-cache@v2
       - name: Install system deps (clipboard)
         run: sudo apt-get update && sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev

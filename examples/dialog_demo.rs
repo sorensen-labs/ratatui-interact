@@ -227,14 +227,14 @@ fn main() -> io::Result<()> {
         if let Event::Key(key) = event::read()? {
             if app.dialog_state.is_visible() {
                 // Dialog is open - handle dialog events
-                let mut dialog = PopupDialog::new(
-                    &app.config,
-                    &mut app.dialog_state,
-                    |_, _, _| {}, // Empty renderer for event handling
-                );
-
-                let result = dialog.handle_key(key);
-                drop(dialog); // Drop dialog to release borrow
+                let result = {
+                    let mut dialog = PopupDialog::new(
+                        &app.config,
+                        &mut app.dialog_state,
+                        |_, _, _| {}, // Empty renderer for event handling
+                    );
+                    dialog.handle_key(key)
+                };
 
                 match result {
                     EventResult::Action(ContainerAction::Submit) => {
@@ -262,10 +262,11 @@ fn main() -> io::Result<()> {
             if app.dialog_state.is_visible() && is_left_click(&mouse) {
                 // Handle dialog mouse events
                 let screen = terminal.get_frame().area();
-                let mut dialog = PopupDialog::new(&app.config, &mut app.dialog_state, |_, _, _| {});
-
-                let result = dialog.handle_mouse_with_screen(mouse, screen);
-                drop(dialog); // Drop dialog to release borrow
+                let result = {
+                    let mut dialog =
+                        PopupDialog::new(&app.config, &mut app.dialog_state, |_, _, _| {});
+                    dialog.handle_mouse_with_screen(mouse, screen)
+                };
 
                 match result {
                     EventResult::Action(ContainerAction::Submit) => {
