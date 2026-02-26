@@ -171,18 +171,22 @@ pub mod prelude {
         CheckBoxState, CheckBoxStyle, ContextMenu, ContextMenuAction, ContextMenuItem,
         ContextMenuState, ContextMenuStyle, DialogConfig, DialogFocusTarget, DialogState, Input,
         InputAction, InputState, InputStyle, Menu, MenuBar, MenuBarAction, MenuBarClickTarget,
-        MenuBarItem, MenuBarState, MenuBarStyle, PopupDialog, calculate_menu_bar_height,
-        calculate_menu_height, handle_context_menu_key, handle_context_menu_mouse,
-        handle_menu_bar_key, handle_menu_bar_mouse, is_context_menu_trigger,
+        MenuBarItem, MenuBarState, MenuBarStyle, PopupDialog, Select, SelectAction, SelectState,
+        SelectStyle, TabConfig, TextArea, TextAreaAction, TextAreaState, TextAreaStyle, WrapMode,
+        calculate_dropdown_height, calculate_menu_bar_height, calculate_menu_height,
+        handle_context_menu_key, handle_context_menu_mouse, handle_menu_bar_key,
+        handle_menu_bar_mouse, handle_select_key, handle_select_mouse, is_context_menu_trigger,
         menu_bar_dropdown_height,
     };
 
     // Display Components
     pub use crate::components::{
         AnimatedText, AnimatedTextEffect, AnimatedTextState, AnimatedTextStyle, HotkeyFooter,
-        HotkeyFooterStyle, HotkeyItem, ParagraphExt, Progress, ProgressStyle, ScrollableContent,
-        ScrollableContentAction, ScrollableContentState, ScrollableContentStyle, StatusLine,
-        StatusLineStyle, Toast, ToastState, ToastStyle, WaveDirection,
+        HotkeyFooterStyle, HotkeyItem, LabelPosition, MarqueeMode, MarqueeState, MarqueeStyle,
+        MarqueeText, ParagraphExt, Progress, ProgressStyle, ScrollDir, ScrollableContent,
+        ScrollableContentAction, ScrollableContentState, ScrollableContentStyle, Spinner,
+        SpinnerFrames, SpinnerState, SpinnerStyle, StatusLine, StatusLineStyle, Toast, ToastState,
+        ToastStyle, WaveDirection, bounce_marquee, continuous_marquee,
         handle_scrollable_content_key, handle_scrollable_content_mouse,
     };
 
@@ -191,8 +195,11 @@ pub mod prelude {
 
     // Navigation Components
     pub use crate::components::{
-        EntryType, FileEntry, FileExplorer, FileExplorerState, FileExplorerStyle, ListPicker,
-        ListPickerState, ListPickerStyle, key_hints_footer,
+        Accordion, AccordionMode, AccordionState, AccordionStyle, Breadcrumb, BreadcrumbAction,
+        BreadcrumbItem, BreadcrumbState, BreadcrumbStyle, EntryType, FileEntry, FileExplorer,
+        FileExplorerState, FileExplorerStyle, ListPicker, ListPickerState, ListPickerStyle,
+        accordion_height, breadcrumb_hovered_index, handle_accordion_key, handle_accordion_mouse,
+        handle_breadcrumb_key, handle_breadcrumb_mouse, key_hints_footer,
     };
 
     // Tree Components
@@ -202,8 +209,9 @@ pub mod prelude {
 
     // Layout Components
     pub use crate::components::{
-        Orientation, SplitPane, SplitPaneAction, SplitPaneState, SplitPaneStyle,
-        handle_split_pane_key, handle_split_pane_mouse,
+        Orientation, SplitPane, SplitPaneAction, SplitPaneState, SplitPaneStyle, Tab, TabPosition,
+        TabView, TabViewAction, TabViewState, TabViewStyle, handle_split_pane_key,
+        handle_split_pane_mouse, handle_tab_view_key, handle_tab_view_mouse,
     };
 
     // Viewer Components
