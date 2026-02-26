@@ -325,13 +325,13 @@ impl AnimatedTextStyle {
 
     /// Add bold modifier
     pub fn bold(mut self) -> Self {
-        self.modifiers = self.modifiers | Modifier::BOLD;
+        self.modifiers |= Modifier::BOLD;
         self
     }
 
     /// Add italic modifier
     pub fn italic(mut self) -> Self {
-        self.modifiers = self.modifiers | Modifier::ITALIC;
+        self.modifiers |= Modifier::ITALIC;
         self
     }
 
@@ -359,20 +359,17 @@ impl AnimatedTextStyle {
 
     /// Success style (green pulse)
     pub fn success() -> Self {
-        Self::pulse(Color::Green, Color::LightGreen)
-            .bold()
+        Self::pulse(Color::Green, Color::LightGreen).bold()
     }
 
     /// Warning style (yellow pulse)
     pub fn warning() -> Self {
-        Self::pulse(Color::Yellow, Color::LightYellow)
-            .bold()
+        Self::pulse(Color::Yellow, Color::LightYellow).bold()
     }
 
     /// Error style (red pulse)
     pub fn error() -> Self {
-        Self::pulse(Color::Red, Color::LightRed)
-            .bold()
+        Self::pulse(Color::Red, Color::LightRed).bold()
     }
 
     /// Info style (blue wave)
@@ -382,8 +379,7 @@ impl AnimatedTextStyle {
 
     /// Loading style (cyan wave)
     pub fn loading() -> Self {
-        Self::wave(Color::DarkGray, Color::Cyan)
-            .wave_width(5)
+        Self::wave(Color::DarkGray, Color::Cyan).wave_width(5)
     }
 
     /// Highlight style (yellow sparkle)
@@ -473,11 +469,7 @@ impl<'a> AnimatedText<'a> {
 
         if char_index >= start && char_index < end {
             // Calculate intensity based on distance from center
-            let distance = if char_index >= wave_center {
-                char_index - wave_center
-            } else {
-                wave_center - char_index
-            };
+            let distance = char_index.abs_diff(wave_center);
             let max_distance = half_width.max(1);
             let intensity = 1.0 - (distance as f32 / max_distance as f32);
             Self::interpolate_color(
@@ -516,13 +508,19 @@ impl<'a> AnimatedText<'a> {
         let shift = self.state.frame as f32 / 255.0;
         let position = (base_position + shift) % 1.0;
 
-        Self::interpolate_color(self.style.primary_color, self.style.secondary_color, position)
+        Self::interpolate_color(
+            self.style.primary_color,
+            self.style.secondary_color,
+            position,
+        )
     }
 
     /// Check if a character should sparkle
     fn should_sparkle(&self, char_index: usize) -> bool {
         // Simple pseudo-random based on position and seed
-        let hash = char_index.wrapping_mul(31).wrapping_add(self.state.sparkle_seed as usize);
+        let hash = char_index
+            .wrapping_mul(31)
+            .wrapping_add(self.state.sparkle_seed as usize);
         hash % 8 == 0 // ~12.5% chance
     }
 
@@ -547,8 +545,7 @@ impl Widget for AnimatedText<'_> {
         let y = area.y;
 
         // Build base style with modifiers
-        let base_style = Style::default()
-            .add_modifier(self.style.modifiers);
+        let base_style = Style::default().add_modifier(self.style.modifiers);
 
         let base_style = if let Some(bg) = self.style.background {
             base_style.bg(bg)
@@ -557,8 +554,7 @@ impl Widget for AnimatedText<'_> {
         };
 
         // Render each character with its color
-        let mut char_index = 0;
-        for ch in self.text.chars() {
+        for (char_index, ch) in self.text.chars().enumerate() {
             let ch_width = unicode_width::UnicodeWidthChar::width(ch).unwrap_or(0);
 
             if x >= area.x + area.width {
@@ -581,8 +577,6 @@ impl Widget for AnimatedText<'_> {
                 buf.set_string(x, y, ch.to_string(), style);
                 x += ch_width as u16;
             }
-
-            char_index += 1;
         }
 
         // Clear rest of the area if text is shorter

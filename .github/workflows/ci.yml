@@ -1,0 +1,110 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: "-Dwarnings"
+
+jobs:
+  fmt:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+      - run: cargo fmt --all --check
+
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Install system deps (clipboard)
+        run: sudo apt-get update && sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev
+      - run: cargo clippy --all-targets --all-features
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Install system deps (clipboard)
+        run: sudo apt-get update && sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev
+      - run: cargo test
+      - run: cargo test --all-features
+
+  test-features:
+    name: Test feature combinations
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - features: ""
+            cache-key: "default"
+          - features: "markdown"
+            cache-key: "markdown"
+          - features: "filesystem"
+            cache-key: "filesystem"
+          - features: "clipboard"
+            cache-key: "clipboard"
+          - features: "markdown,filesystem,clipboard"
+            cache-key: "all-features"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.cache-key }}
+      - name: Install system deps (clipboard)
+        if: contains(matrix.features, 'clipboard')
+        run: sudo apt-get update && sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev
+      - name: Check (default features)
+        if: matrix.features == ''
+        run: cargo check
+      - name: Check (with features)
+        if: matrix.features != ''
+        run: cargo check --features "${{ matrix.features }}"
+
+  msrv:
+    name: MSRV (1.86)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # dtolnay/rust-toolchain@master is the documented way to specify
+      # a custom toolchain version; there is no @v1 tag for this action.
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.86"
+      - uses: Swatinem/rust-cache@v2
+      - name: Install system deps (clipboard)
+        run: sudo apt-get update && sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev
+      - run: cargo check --all-features
+
+  doc:
+    name: Docs
+    runs-on: ubuntu-latest
+    env:
+      RUSTDOCFLAGS: "-Dwarnings"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Install system deps (clipboard)
+        run: sudo apt-get update && sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev
+      - run: cargo doc --no-deps --all-features

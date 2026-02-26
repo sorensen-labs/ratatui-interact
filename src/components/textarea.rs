@@ -244,8 +244,7 @@ impl TextAreaState {
             self.cursor_col -= 1;
             let byte_pos = char_to_byte_index(&self.lines[self.cursor_line], self.cursor_col);
             if let Some(c) = self.lines[self.cursor_line][byte_pos..].chars().next() {
-                self.lines[self.cursor_line]
-                    .replace_range(byte_pos..byte_pos + c.len_utf8(), "");
+                self.lines[self.cursor_line].replace_range(byte_pos..byte_pos + c.len_utf8(), "");
                 return true;
             }
         } else if self.cursor_line > 0 {
@@ -275,8 +274,7 @@ impl TextAreaState {
             // Delete character within line
             let byte_pos = char_to_byte_index(&self.lines[self.cursor_line], self.cursor_col);
             if let Some(c) = self.lines[self.cursor_line][byte_pos..].chars().next() {
-                self.lines[self.cursor_line]
-                    .replace_range(byte_pos..byte_pos + c.len_utf8(), "");
+                self.lines[self.cursor_line].replace_range(byte_pos..byte_pos + c.len_utf8(), "");
                 return true;
             }
         } else if self.cursor_line + 1 < self.lines.len() {
@@ -319,8 +317,7 @@ impl TextAreaState {
 
         // Delete word characters
         while self.cursor_col > 0 {
-            if let Some(c) = char_at(&self.lines[self.cursor_line], self.cursor_col - 1)
-            {
+            if let Some(c) = char_at(&self.lines[self.cursor_line], self.cursor_col - 1) {
                 if !c.is_whitespace() {
                     self.delete_char_backward();
                 } else {
@@ -813,7 +810,6 @@ impl Default for TextArea<'_> {
 }
 
 impl<'a> TextArea<'a> {
-
     /// Set the label (displayed in the border title).
     pub fn label(mut self, label: &'a str) -> Self {
         self.label = Some(label);
@@ -962,8 +958,7 @@ impl<'a> TextArea<'a> {
             // Build content with cursor
             if is_cursor_line && state.focused {
                 // Calculate visible cursor position
-                let cursor_visible_col =
-                    state.cursor_col.saturating_sub(state.scroll_x);
+                let cursor_visible_col = state.cursor_col.saturating_sub(state.scroll_x);
 
                 let visible_char_count = visible_chars.chars().count();
 
@@ -974,7 +969,8 @@ impl<'a> TextArea<'a> {
                         .skip(cursor_visible_col)
                         .take(1)
                         .collect();
-                    let after: String = visible_chars.chars().skip(cursor_visible_col + 1).collect();
+                    let after: String =
+                        visible_chars.chars().skip(cursor_visible_col + 1).collect();
 
                     if !before.is_empty() {
                         spans.push(Span::styled(before, line_style));
@@ -984,7 +980,11 @@ impl<'a> TextArea<'a> {
                     let cursor_style = Style::default()
                         .fg(self.style.cursor_fg)
                         .bg(self.style.text_fg);
-                    let cursor_display = if cursor_char.is_empty() { " " } else { &cursor_char };
+                    let cursor_display = if cursor_char.is_empty() {
+                        " "
+                    } else {
+                        &cursor_char
+                    };
                     spans.push(Span::styled(cursor_display.to_string(), cursor_style));
 
                     if !after.is_empty() {
