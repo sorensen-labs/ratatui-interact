@@ -53,18 +53,7 @@ pub struct LogViewerState {
     pub search: SearchState,
 }
 
-/// Search state for log viewer
-#[derive(Debug, Clone, Default)]
-pub struct SearchState {
-    /// Whether search is active
-    pub active: bool,
-    /// Current search query
-    pub query: String,
-    /// Line indices that match the query
-    pub matches: Vec<usize>,
-    /// Current match index
-    pub current_match: usize,
-}
+use super::search_state::SearchState;
 
 impl LogViewerState {
     /// Create a new log viewer state with content

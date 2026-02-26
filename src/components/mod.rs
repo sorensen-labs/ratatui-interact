@@ -61,6 +61,7 @@ pub mod input;
 pub mod list_picker;
 pub mod log_viewer;
 pub mod marquee;
+pub mod search_state;
 pub mod menu_bar;
 pub mod mouse_pointer;
 pub mod paragraph_ext;
@@ -109,7 +110,8 @@ pub use hotkey_dialog::{
 pub use hotkey_footer::{HotkeyFooter, HotkeyFooterStyle, HotkeyItem};
 pub use input::{Input, InputAction, InputState, InputStyle};
 pub use list_picker::{ListPicker, ListPickerState, ListPickerStyle, key_hints_footer};
-pub use log_viewer::{LogViewer, LogViewerState, LogViewerStyle, SearchState};
+pub use log_viewer::{LogViewer, LogViewerState, LogViewerStyle};
+pub use search_state::SearchState;
 pub use marquee::{
     MarqueeMode, MarqueeState, MarqueeStyle, MarqueeText, ScrollDir, bounce_marquee,
     continuous_marquee,
