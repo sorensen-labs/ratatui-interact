@@ -42,7 +42,7 @@ use ratatui::{
 
 use crossterm::event::{KeyCode, KeyEvent, KeyModifiers, MouseEvent, MouseEventKind};
 
-use super::log_viewer::SearchState;
+use super::search_state::SearchState;
 
 // ============================================================================
 // Enums
