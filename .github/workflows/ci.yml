@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 env:
   CARGO_TERM_COLOR: always
   RUSTFLAGS: "-Dwarnings"
@@ -71,13 +74,20 @@ jobs:
       - name: Install system deps (clipboard)
         if: contains(matrix.features, 'clipboard')
         run: sudo apt-get update && sudo apt-get install -y libxcb-shape0-dev libxcb-xfixes0-dev
-      - run: cargo check --features "${{ matrix.features }}"
+      - name: Check (default features)
+        if: matrix.features == ''
+        run: cargo check
+      - name: Check (with features)
+        if: matrix.features != ''
+        run: cargo check --features "${{ matrix.features }}"
 
   msrv:
     name: MSRV (1.86)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # dtolnay/rust-toolchain@master is the documented way to specify
+      # a custom toolchain version; there is no @v1 tag for this action.
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: "1.86"
