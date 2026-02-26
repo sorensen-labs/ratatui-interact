@@ -179,10 +179,11 @@ pub mod prelude {
 
     // Display Components
     pub use crate::components::{
-        AnimatedText, AnimatedTextEffect, AnimatedTextState, AnimatedTextStyle, ParagraphExt,
-        Progress, ProgressStyle, ScrollableContent, ScrollableContentAction,
-        ScrollableContentState, ScrollableContentStyle, Toast, ToastState, ToastStyle,
-        WaveDirection, handle_scrollable_content_key, handle_scrollable_content_mouse,
+        AnimatedText, AnimatedTextEffect, AnimatedTextState, AnimatedTextStyle, HotkeyFooter,
+        HotkeyFooterStyle, HotkeyItem, ParagraphExt, Progress, ProgressStyle, ScrollableContent,
+        ScrollableContentAction, ScrollableContentState, ScrollableContentStyle, StatusLine,
+        StatusLineStyle, Toast, ToastState, ToastStyle, WaveDirection,
+        handle_scrollable_content_key, handle_scrollable_content_mouse,
     };
 
     // Utility Components
