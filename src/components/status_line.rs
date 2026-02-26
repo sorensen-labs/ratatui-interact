@@ -177,8 +177,11 @@ impl Default for StatusLine<'_> {
 }
 
 /// Render right sections from right to left, returning the new right edge.
+///
+/// Iterates in reverse so that the last-added right section renders at
+/// the right edge, matching the intuitive left-to-right visual order.
 fn render_right(sections: Vec<StatusLineSection<'_>>, mut x_end: u16, y: u16, buf: &mut Buffer) -> u16 {
-    for section in sections {
+    for section in sections.into_iter().rev() {
         let content_w = section.content.width() as u16;
         section.content.render(
             Rect::new(x_end.saturating_sub(content_w), y, content_w, 1),

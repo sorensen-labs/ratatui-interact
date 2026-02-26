@@ -92,11 +92,8 @@ impl HotkeyFooterStyle {
     pub fn minimal() -> Self {
         Self {
             key_style: Style::default().fg(Color::White).add_modifier(Modifier::BOLD),
-            description_style: Style::default().fg(Color::DarkGray),
-            separator: "  ".to_string(),
-            background: Style::default().bg(Color::Black),
             bracket_key: false,
-            alignment: Alignment::Left,
+            ..Default::default()
         }
     }
 
@@ -107,10 +104,8 @@ impl HotkeyFooterStyle {
                 .fg(Color::Green)
                 .add_modifier(Modifier::BOLD),
             description_style: Style::default().fg(Color::White),
-            separator: "  ".to_string(),
-            background: Style::default().bg(Color::Black),
             bracket_key: false,
-            alignment: Alignment::Left,
+            ..Default::default()
         }
     }
 
@@ -175,29 +170,29 @@ impl<'a> HotkeyFooter<'a> {
         self
     }
 
-    /// Build the span list for all items.
-    fn build_spans(&self) -> Vec<Span<'static>> {
-        let mut spans: Vec<Span<'static>> = Vec::new();
+    /// Build the span list for all items using borrowed references.
+    fn build_spans(&self) -> Vec<Span<'_>> {
+        let mut spans: Vec<Span<'_>> = Vec::new();
 
         for (i, item) in self.items.iter().enumerate() {
             if i > 0 {
                 spans.push(Span::styled(
-                    self.style.separator.clone(),
+                    self.style.separator.as_str(),
                     self.style.description_style,
                 ));
             }
 
             if self.style.bracket_key {
-                spans.push(Span::styled(
-                    format!("[{}]", item.key),
-                    self.style.key_style,
-                ));
+                spans.push(Span::styled("[", self.style.key_style));
+                spans.push(Span::styled(item.key.as_str(), self.style.key_style));
+                spans.push(Span::styled("]", self.style.key_style));
             } else {
-                spans.push(Span::styled(item.key.clone(), self.style.key_style));
+                spans.push(Span::styled(item.key.as_str(), self.style.key_style));
             }
 
+            spans.push(Span::styled(" ", self.style.description_style));
             spans.push(Span::styled(
-                format!(" {}", item.description),
+                item.description.as_str(),
                 self.style.description_style,
             ));
         }

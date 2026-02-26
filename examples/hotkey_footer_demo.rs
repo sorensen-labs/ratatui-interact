@@ -1,7 +1,7 @@
 //! HotkeyFooter Demo
 //!
 //! Shows a hotkey footer with different style presets.
-//! Press 's' to cycle styles, 'b' to toggle brackets.
+//! Press 's' to cycle styles and 'q' to quit.
 //!
 //! Run with: cargo run --example hotkey_footer_demo
 
